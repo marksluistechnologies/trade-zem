@@ -279,7 +279,7 @@ export default function TradeZemPro() {
             </div>
             <div className="text-center pt-10 border-t border-white/5">
                 <p className="text-[9px] text-gray-600 uppercase tracking-[0.4em] font-black font-sans">
-                    Decentralized • High Velocity • Trade Zem • © 2026
+                    Decentralized • High Velocity • Institutional Grade • © 2026
                 </p>
             </div>
         </div>
