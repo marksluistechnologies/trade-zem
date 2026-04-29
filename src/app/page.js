@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Stars, Float, Sparkles } from '@react-three/drei';
+import Link from 'next/link';
 import * as THREE from 'three';
 import { 
   FiArrowUp, FiTarget, FiBriefcase, FiGift, FiShield, 
@@ -263,7 +264,7 @@ export default function TradeZemPro() {
       </section>
 
       {/* Footer with Links */}
-      <footer className="py-20 border-t border-white/5 font-sans">
+      <footer className="relative z-10 py-20 border-t border-white/5 font-sans">
         <div className="max-w-7xl mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-12 mb-16 text-center md:text-left">
                 <div>
@@ -271,10 +272,10 @@ export default function TradeZemPro() {
                     <p className="text-gray-500 text-[10px] leading-relaxed uppercase tracking-widest font-bold font-sans">The ultimate high-velocity crypto arena. Speed. Math. Decentrallized.</p>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 uppercase text-[10px] font-black tracking-widest text-gray-400">
-                    <a href="/terms" className="hover:text-green-500 transition-colors">Term of use</a>
-                    <a href="/privacy" className="hover:text-green-500 transition-colors">Privacy Policy</a>
-                    <a href="/risk" className="hover:text-green-500 transition-colors">Risk Warning</a>
-                    <a href="/audit" className="hover:text-green-500 transition-colors">Audit Report</a>
+                    <Link href="/terms" className="hover:text-green-500 transition-colors">Term of use</Link>
+                    <Link href="/privacy" className="hover:text-green-500 transition-colors">Privacy Policy</Link>
+                    <Link href="/risk" className="hover:text-green-500 transition-colors">Risk Warning</Link>
+                    <Link href="/audit" className="hover:text-green-500 transition-colors">Audit Report</Link>
                 </div>
             </div>
             <div className="text-center pt-10 border-t border-white/5">
