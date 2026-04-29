@@ -6,7 +6,7 @@ import { Canvas } from '@react-three/fiber';
 import { Stars, Sparkles } from '@react-three/drei';
 import { 
   FiArrowUp, FiShield, FiFileText, FiDatabase, 
-  FiEye, FiShare2, FiLock, FiGlobe
+  FiEye, FiShare2, FiLock, FiGlobe, FiActivity
 } from 'react-icons/fi';
 
 // --- Shared Badge Component ---
