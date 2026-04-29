@@ -109,8 +109,12 @@ export default function TradeZemPro() {
           TRADE<span className="text-green-500">ZEM</span>
         </div>
         <div className="flex items-center gap-2 md:gap-4 font-sans">
-          <button className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hidden md:block transition-all px-4 py-2 hover:bg-white/5 rounded-full">Login</button>
-          <button className="px-5 py-2.5 bg-white text-black text-[9px] md:text-[10px] font-black rounded-full hover:bg-green-500 transition-all uppercase tracking-widest shadow-2xl whitespace-nowrap">Start Trading</button>
+          <Link href="/login" className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hidden md:block transition-all px-4 py-2 hover:bg-white/5 rounded-full">
+            Login
+          </Link>
+          <Link href="/login" className="px-5 py-2.5 bg-white text-black text-[9px] md:text-[10px] font-black rounded-full hover:bg-green-500 transition-all uppercase tracking-widest shadow-2xl whitespace-nowrap inline-block text-center">
+            Start Trading
+          </Link>
         </div>
       </nav>
 
@@ -126,8 +130,12 @@ export default function TradeZemPro() {
             Engage with 10 proprietary algorithmic indices. High-frequency 1-second candles. Decentralized liquidity settlement.
           </p>
           <div className="flex flex-col sm:flex-row gap-8 justify-center pointer-events-auto">
-            <button onClick={() => document.getElementById('market').scrollIntoView({behavior:'smooth'})} className="px-14 py-6 bg-green-500 text-black font-black rounded-3xl shadow-[0_20px_50px_rgba(34,197,94,0.3)] hover:scale-105 transition-all uppercase tracking-widest text-xs font-sans">Launch App</button>
-            <button onClick={() => document.getElementById('expert').scrollIntoView({behavior:'smooth'})} className="px-14 py-6 bg-white/5 border border-white/10 text-white font-black rounded-3xl backdrop-blur-xl hover:bg-white/10 transition-all uppercase tracking-widest text-xs font-sans">Download App</button>
+            <Link href="/login" className="px-14 py-6 bg-green-500 text-black font-black rounded-3xl shadow-[0_20px_50px_rgba(34,197,94,0.3)] hover:scale-105 transition-all uppercase tracking-widest text-xs font-sans text-center inline-block">
+              Launch App
+            </Link>
+            <Link href="/download" className="px-14 py-6 bg-white/5 border border-white/10 text-white font-black rounded-3xl backdrop-blur-xl hover:bg-white/10 transition-all uppercase tracking-widest text-xs font-sans text-center inline-block">
+              Download App
+            </Link>
           </div>
         </div>
       </section>
@@ -258,7 +266,9 @@ export default function TradeZemPro() {
                 <FiShield className="text-6xl text-green-500 mx-auto mb-8" />
                 <h3 className="text-4xl font-black uppercase tracking-tighter mb-6 leading-none font-sans text-center">Crypto Gateway</h3>
                 <p className="text-gray-400 mb-10 leading-relaxed text-sm font-sans text-center">Secure, instant deposits and 24/7 withdrawals via the integrated Crypto Payment Node.</p>
-                <button className="w-full py-5 bg-green-500 text-gray-950 font-black rounded-2xl uppercase tracking-[0.2em] text-xs shadow-3xl font-sans">Launch Trading App</button>
+                <Link href="/login" className="w-full py-5 bg-green-500 text-gray-950 font-black rounded-2xl uppercase tracking-[0.2em] text-xs shadow-3xl font-sans block text-center hover:bg-green-400 transition-all">
+                  Launch Trading App
+                </Link>
             </div>
         </div>
       </section>
