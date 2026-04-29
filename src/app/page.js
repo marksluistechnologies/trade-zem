@@ -126,7 +126,7 @@ export default function TradeZemPro() {
           </p>
           <div className="flex flex-col sm:flex-row gap-8 justify-center pointer-events-auto">
             <button onClick={() => document.getElementById('market').scrollIntoView({behavior:'smooth'})} className="px-14 py-6 bg-green-500 text-black font-black rounded-3xl shadow-[0_20px_50px_rgba(34,197,94,0.3)] hover:scale-105 transition-all uppercase tracking-widest text-xs font-sans">Launch App</button>
-            <button onClick={() => document.getElementById('expert').scrollIntoView({behavior:'smooth'})} className="px-14 py-6 bg-white/5 border border-white/10 text-white font-black rounded-3xl backdrop-blur-xl hover:bg-white/10 transition-all uppercase tracking-widest text-xs font-sans">Agent Panel</button>
+            <button onClick={() => document.getElementById('expert').scrollIntoView({behavior:'smooth'})} className="px-14 py-6 bg-white/5 border border-white/10 text-white font-black rounded-3xl backdrop-blur-xl hover:bg-white/10 transition-all uppercase tracking-widest text-xs font-sans">Download App</button>
           </div>
         </div>
       </section>
@@ -203,7 +203,7 @@ export default function TradeZemPro() {
           <div className="grid lg:grid-cols-2 gap-20">
             <div className="space-y-10 text-left">
               <FiBriefcase className="text-6xl text-green-500 p-4 bg-green-950/30 rounded-2xl border border-green-800" />
-              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] font-sans text-left">Tradense <br/><span className="text-green-400 font-sans">Expert</span></h2>
+              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] font-sans text-left">Trade Zem <br/><span className="text-green-400 font-sans">Expert</span></h2>
               <p className="text-gray-400 text-xl leading-relaxed font-sans">Scale the protocol and monetize your network. Our Expert Program provides deep-level incentives for institutional contributors.</p>
               <div className="grid gap-4">
                 <div className="p-8 rounded-3xl bg-black/40 border border-white/5 flex justify-between items-center group hover:border-green-500/50 transition-all font-sans">
@@ -279,7 +279,7 @@ export default function TradeZemPro() {
             </div>
             <div className="text-center pt-10 border-t border-white/5">
                 <p className="text-[9px] text-gray-600 uppercase tracking-[0.4em] font-black font-sans">
-                    Decentralized • High Velocity • Institutional Grade • © 2026
+                    Decentralized • High Velocity • Trade Zem • © 2026
                 </p>
             </div>
         </div>
