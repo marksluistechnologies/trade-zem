@@ -116,7 +116,7 @@ export default function NotificationsPage() {
           <SidebarItem href="/dashboard" icon={<FiHome />} text="Hub" isOpen={isSidebarOpen} />
           <SidebarItem href="/dashboard#arena" icon={<FiActivity />} text="Arena" isOpen={isSidebarOpen} />
           <SidebarItem href="/dashboard#wallet" icon={<FiCreditCard />} text="Wallet" isOpen={isSidebarOpen} />
-          <SidebarItem href="/dashboard#expert" icon={<FiUsers />} text="Agent" isOpen={isSidebarOpen} />
+          <SidebarItem href="/dashboard#expert" icon={<FiUsers />} text="Profile" isOpen={isSidebarOpen} />
         </nav>
 
         <div className="mt-auto border-t border-white/5 pt-6 px-4 space-y-2">
@@ -233,7 +233,7 @@ export default function NotificationsPage() {
           </Link>
           <Link href="/dashboard#expert" className="flex flex-col items-center gap-1.5 text-gray-500 hover:text-white transition-colors">
             <FiUsers className="text-xl" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Agent</span>
+            <span className="text-[8px] font-black uppercase tracking-widest">Profile</span>
           </Link>
         </div>
       </nav>

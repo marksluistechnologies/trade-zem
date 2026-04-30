@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { Stars, Sparkles } from '@react-three/drei';
 import Link from 'next/link';
 import { 
-  FiHome, FiActivity, FiCreditCard, FiUsers, FiUser, 
-  FiArrowUpRight, FiArrowDownLeft, FiClock, 
-  FiCheckCircle, FiXCircle, FiBell, FiPlus, FiMinus, 
-  FiEye, FiTarget, FiBriefcase, FiLogOut, FiSettings,
-  FiChevronLeft, FiChevronRight
+  FiActivity, FiUser, FiArrowUpRight, FiArrowDownLeft, 
+  FiClock, FiCheckCircle, FiXCircle, FiBell, FiPlus, 
+  FiMinus, FiEye, FiTarget, FiBriefcase 
 } from 'react-icons/fi';
+
+// Naya Navigation component import kiya hai
+import Navigation from '@/components/Navigation';
 
 // --- Shared Badge Component ---
 const Badge = ({ children, type = 'neutral' }) => {
@@ -29,9 +30,6 @@ const Badge = ({ children, type = 'neutral' }) => {
 };
 
 export default function Dashboard() {
-  // Sidebar State for Desktop
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
   // Mock Data for UI
   const userData = {
     balance: "1,240.50",
@@ -60,69 +58,9 @@ export default function Dashboard() {
       </div>
 
       {/* ============================================================== */}
-      {/* 1. DESKTOP SIDEBAR (Sticky & Collapsible)                      */}
+      {/* 1. SHARED NAVIGATION (Sidebar + Bottom Nav)                    */}
       {/* ============================================================== */}
-      <motion.aside 
-        initial={false}
-        animate={{ width: isSidebarOpen ? 256 : 80 }}
-        className="sticky top-0 h-screen flex-none bg-[#050608]/90 backdrop-blur-2xl border-r border-white/5 z-50 hidden md:flex flex-col py-6 shadow-[10px_0_30px_rgba(0,0,0,0.5)]"
-      >
-        
-        {/* Sidebar Toggle Button */}
-        <button 
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="absolute -right-3.5 top-8 w-7 h-7 bg-green-500 text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_15px_#22c55e]"
-        >
-          {isSidebarOpen ? <FiChevronLeft className="text-sm" /> : <FiChevronRight className="text-sm" />}
-        </button>
-
-        {/* Brand Logo */}
-        <div className={`px-6 mb-12 flex items-center ${isSidebarOpen ? 'justify-start' : 'justify-center'}`}>
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div className="w-1.5 h-6 bg-green-500 shadow-[0_0_15px_#22c55e] flex-none" />
-            <AnimatePresence>
-              {isSidebarOpen && (
-                <motion.span 
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  className="text-xl font-black tracking-[0.3em] overflow-hidden whitespace-nowrap"
-                >
-                  TRADE<span className="text-green-500">ZEM</span>
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </Link>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className="flex-1 space-y-2 px-4">
-          <SidebarItem href="/dashboard" icon={<FiHome />} text="Hub" active isOpen={isSidebarOpen} />
-          <SidebarItem href="#arena" icon={<FiActivity />} text="Arena" isOpen={isSidebarOpen} />
-          <SidebarItem href="#wallet" icon={<FiCreditCard />} text="Wallet" isOpen={isSidebarOpen} />
-          <SidebarItem href="#expert" icon={<FiUsers />} text="Agent" isOpen={isSidebarOpen} />
-        </nav>
-
-        {/* Footer Actions in Sidebar */}
-        <div className="mt-auto border-t border-white/5 pt-6 px-4 space-y-2">
-          <SidebarItem href="#settings" icon={<FiSettings />} text="Settings" isOpen={isSidebarOpen} />
-          <button className={`w-full flex items-center gap-4 p-4 rounded-2xl text-red-500 hover:bg-red-500/10 transition-all ${isSidebarOpen ? 'justify-start px-4' : 'justify-center px-0'}`}>
-            <FiLogOut className="text-xl flex-none" />
-            <AnimatePresence>
-              {isSidebarOpen && (
-                <motion.span 
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  className="text-xs font-black uppercase tracking-widest overflow-hidden whitespace-nowrap text-left"
-                >
-                  Disconnect
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </button>
-        </div>
-      </motion.aside>
+      <Navigation />
 
       {/* ============================================================== */}
       {/* 2. MAIN CONTENT AREA (Takes remaining width naturally)         */}
@@ -145,10 +83,11 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="relative p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+            {/* Using Link here so user can navigate to notifications page */}
+            <Link href="/notifications" className="relative p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors block">
               <FiBell className="text-gray-400 text-sm md:text-base" />
               <span className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]"></span>
-            </button>
+            </Link>
           </div>
         </header>
 
@@ -256,69 +195,6 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
-
-      {/* ============================================================== */}
-      {/* 3. MOBILE BOTTOM NAV (Hidden on Desktop)                       */}
-      {/* ============================================================== */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 md:hidden bg-[#050608]/95 backdrop-blur-3xl border-t border-white/10 px-6 py-4 pb-safe">
-        <div className="flex justify-between items-center">
-          
-          <Link href="/dashboard" className="flex flex-col items-center gap-1.5 text-green-500">
-            <FiHome className="text-xl" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Hub</span>
-          </Link>
-          
-          <Link href="#arena" className="flex flex-col items-center gap-1.5 text-gray-500 hover:text-white transition-colors">
-            <FiActivity className="text-xl" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Arena</span>
-          </Link>
-
-          {/* Trade Button (Center Highlight) */}
-          <Link href="#trade" className="relative -top-5 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-black font-black shadow-[0_10px_30px_rgba(34,197,94,0.4)] hover:scale-105 transition-transform flex-none">
-            <FiPlus className="text-2xl" />
-          </Link>
-
-          <Link href="#wallet" className="flex flex-col items-center gap-1.5 text-gray-500 hover:text-white transition-colors">
-            <FiCreditCard className="text-xl" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Wallet</span>
-          </Link>
-
-          <Link href="#expert" className="flex flex-col items-center gap-1.5 text-gray-500 hover:text-white transition-colors">
-            <FiUsers className="text-xl" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Agent</span>
-          </Link>
-          
-        </div>
-      </nav>
-      
     </div>
-  );
-}
-
-// Helper Component for Sidebar Items
-function SidebarItem({ href, icon, text, active, isOpen }) {
-  return (
-    <Link 
-      href={href} 
-      className={`flex items-center gap-4 p-4 rounded-2xl transition-all ${
-        active 
-          ? 'bg-green-500/10 text-green-400 border border-green-500/20' 
-          : 'text-gray-500 hover:text-white hover:bg-white/5 border border-transparent'
-      } ${isOpen ? 'justify-start px-4' : 'justify-center px-0'}`}
-    >
-      <div className="text-xl flex-none">{icon}</div>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.span 
-            initial={{ opacity: 0, width: 0 }}
-            animate={{ opacity: 1, width: 'auto' }}
-            exit={{ opacity: 0, width: 0 }}
-            className="text-xs font-black uppercase tracking-widest overflow-hidden whitespace-nowrap"
-          >
-            {text}
-          </motion.span>
-        )}
-      </AnimatePresence>
-    </Link>
   );
 }
