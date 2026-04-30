@@ -6,7 +6,7 @@ import { Canvas } from '@react-three/fiber';
 import { Stars, Sparkles } from '@react-three/drei';
 import Link from 'next/link';
 import { 
-  FiHome, FiActivity, FiWallet, FiUsers, FiUser, 
+  FiHome, FiActivity, FiCreditCard, FiUsers, FiUser, 
   FiArrowUpRight, FiArrowDownLeft, FiClock, 
   FiCheckCircle, FiXCircle, FiBell, FiPlus, FiMinus, FiEye
 } from 'react-icons/fi';
