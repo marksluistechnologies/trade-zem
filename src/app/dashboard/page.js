@@ -10,7 +10,7 @@ import {
   FiArrowUpRight, FiArrowDownLeft, FiClock, 
   FiCheckCircle, FiXCircle, FiBell, FiPlus, FiMinus, 
   FiEye, FiTarget, FiBriefcase, FiLogOut, FiSettings,
-  FiChevronLeft, FiChevronRight, FiMenu
+  FiChevronLeft, FiChevronRight
 } from 'react-icons/fi';
 
 // --- Shared Badge Component ---
@@ -51,7 +51,7 @@ export default function Dashboard() {
   return (
     <div className="bg-[#050608] min-h-screen text-white selection:bg-green-500/30 font-sans flex overflow-hidden">
       
-      {/* Dynamic Space Background - Applies to the whole screen */}
+      {/* Dynamic Space Background */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-30">
         <Canvas>
           <Stars radius={100} depth={50} count={4000} factor={4} fade speed={1} />
@@ -60,12 +60,12 @@ export default function Dashboard() {
       </div>
 
       {/* ============================================================== */}
-      {/* 1. DESKTOP SIDEBAR (Collapsible)                               */}
+      {/* 1. DESKTOP SIDEBAR (Sticky & Collapsible)                      */}
       {/* ============================================================== */}
       <motion.aside 
         initial={false}
-        animate={{ width: isSidebarOpen ? 256 : 80 }} // 256px (w-64) or 80px
-        className="fixed left-0 top-0 h-full bg-[#050608]/90 backdrop-blur-2xl border-r border-white/5 z-50 hidden md:flex flex-col py-6 shadow-[10px_0_30px_rgba(0,0,0,0.5)]"
+        animate={{ width: isSidebarOpen ? 256 : 80 }}
+        className="sticky top-0 h-screen flex-none bg-[#050608]/90 backdrop-blur-2xl border-r border-white/5 z-50 hidden md:flex flex-col py-6 shadow-[10px_0_30px_rgba(0,0,0,0.5)]"
       >
         
         {/* Sidebar Toggle Button */}
@@ -125,17 +125,12 @@ export default function Dashboard() {
       </motion.aside>
 
       {/* ============================================================== */}
-      {/* 2. MAIN CONTENT AREA (Pushed right dynamically on Desktop)     */}
+      {/* 2. MAIN CONTENT AREA (Takes remaining width naturally)         */}
       {/* ============================================================== */}
-      <motion.div 
-        layout
-        initial={false}
-        animate={{ marginLeft: isSidebarOpen ? 256 : 80 }}
-        className="flex-1 w-full relative z-10 pb-24 md:pb-12 overflow-y-auto h-screen custom-scrollbar ml-0 md:ml-64" // default ml-0 for mobile, framer handles desktop
-      >
+      <div className="flex-1 min-w-0 relative z-10 pb-24 md:pb-12 h-screen overflow-y-auto custom-scrollbar">
         
         {/* Top Header */}
-        <header className="p-6 md:p-8 flex justify-between items-center border-b border-white/5 bg-[#050608]/80 backdrop-blur-md sticky top-0 z-40">
+        <header className="p-6 md:p-8 flex justify-between items-center border-b border-white/5 md:border-none bg-[#050608]/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none sticky top-0 z-40">
           
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-green-500 to-emerald-900 p-[2px]">
@@ -179,7 +174,7 @@ export default function Dashboard() {
                 </h1>
               </div>
               
-              {/* FIXED: Mobile Button Layout using Grid */}
+              {/* Perfectly Aligned Mobile Buttons */}
               <div className="w-full lg:w-auto grid grid-cols-2 gap-3 sm:gap-4 lg:flex">
                 <button className="flex items-center justify-center gap-1.5 sm:gap-2 py-4 px-2 sm:px-6 lg:px-8 bg-green-500 text-black font-black rounded-xl sm:rounded-2xl uppercase tracking-widest text-[9px] sm:text-[10px] hover:bg-green-400 transition-all shadow-[0_10px_20px_rgba(34,197,94,0.2)] whitespace-nowrap">
                   <FiPlus className="text-sm flex-none" /> Deposit
@@ -260,7 +255,7 @@ export default function Dashboard() {
             </div>
           </div>
         </main>
-      </motion.div>
+      </div>
 
       {/* ============================================================== */}
       {/* 3. MOBILE BOTTOM NAV (Hidden on Desktop)                       */}
@@ -300,7 +295,7 @@ export default function Dashboard() {
   );
 }
 
-// Helper Component for Sidebar Items (to handle expanded/collapsed state cleanly)
+// Helper Component for Sidebar Items
 function SidebarItem({ href, icon, text, active, isOpen }) {
   return (
     <Link 
