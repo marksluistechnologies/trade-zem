@@ -124,7 +124,7 @@ export default function Dashboard() {
                 </p>
                 <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter flex items-center gap-1 md:gap-2 truncate transition-all duration-300">
                   <span className="text-green-500 text-3xl sm:text-4xl md:text-5xl">$</span>
-                  {isBalanceVisible ? userData.balance : '••••••'}
+                  {isBalanceVisible ? userData.balance : '*****'}
                 </h1>
               </div>
               
