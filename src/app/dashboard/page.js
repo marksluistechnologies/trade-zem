@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { 
   FiActivity, FiUser, FiArrowUpRight, FiArrowDownLeft, 
   FiClock, FiCheckCircle, FiXCircle, FiBell, FiPlus, 
-  FiMinus, FiEye, FiTarget, FiBriefcase 
+  FiMinus, FiEye, FiTarget, FiBriefcase, FiEyeOff
 } from 'react-icons/fi';
 
 // Naya Navigation component import kiya hai
@@ -30,6 +30,10 @@ const Badge = ({ children, type = 'neutral' }) => {
 };
 
 export default function Dashboard() {
+
+  // Balance Hide/Unhide State
+  const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+
   // Mock Data for UI
   const userData = {
     balance: "1,240.50",
@@ -106,10 +110,21 @@ export default function Dashboard() {
               
               <div className="w-full">
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-2 md:mb-3 flex items-center gap-2">
-                  Total Portfolio Value <FiEye className="cursor-pointer hover:text-white transition-colors" />
+                  Total Portfolio Value 
+                  <button 
+                    onClick={() => setIsBalanceVisible(!isBalanceVisible)} 
+                    className="focus:outline-none outline-none flex items-center justify-center"
+                  >
+                    {isBalanceVisible ? (
+                      <FiEye className="cursor-pointer hover:text-white transition-colors text-sm" />
+                    ) : (
+                      <FiEyeOff className="cursor-pointer hover:text-white transition-colors text-sm" />
+                    )}
+                  </button>
                 </p>
-                <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter flex items-center gap-1 md:gap-2 truncate">
-                  <span className="text-green-500 text-3xl sm:text-4xl md:text-5xl">$</span>{userData.balance}
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter flex items-center gap-1 md:gap-2 truncate transition-all duration-300">
+                  <span className="text-green-500 text-3xl sm:text-4xl md:text-5xl">$</span>
+                  {isBalanceVisible ? userData.balance : '••••••'}
                 </h1>
               </div>
               
