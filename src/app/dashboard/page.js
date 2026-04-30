@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { 
   FiHome, FiActivity, FiCreditCard, FiUsers, FiUser, 
   FiArrowUpRight, FiArrowDownLeft, FiClock, 
-  FiCheckCircle, FiXCircle, FiBell, FiPlus, FiMinus, FiEye
+  FiCheckCircle, FiXCircle, FiBell, FiPlus, FiMinus, FiEye, FiTarget, FiBriefcase 
 } from 'react-icons/fi';
 
 // --- Shared Badge Component ---
@@ -187,7 +187,7 @@ export default function Dashboard() {
           </Link>
 
           <Link href="#wallet" className="flex flex-col items-center gap-1 p-3 px-5 md:px-6 rounded-2xl text-gray-500 hover:text-white hover:bg-white/5 transition-all">
-            <FiWallet className="text-xl" />
+            <FiCreditCard className="text-xl" />
             <span className="text-[8px] font-black uppercase tracking-widest mt-1">Wallet</span>
           </Link>
 
