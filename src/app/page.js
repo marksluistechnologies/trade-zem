@@ -109,10 +109,12 @@ export default function TradeZemPro() {
           TRADE<span className="text-green-500">ZEM</span>
         </div>
         <div className="flex items-center gap-2 md:gap-4 font-sans">
+          {/* Login button normal rahega */}
           <Link href="/login" className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hidden md:block transition-all px-4 py-2 hover:bg-white/5 rounded-full">
             Login
           </Link>
-          <Link href="/login" className="px-5 py-2.5 bg-white text-black text-[9px] md:text-[10px] font-black rounded-full hover:bg-green-500 transition-all uppercase tracking-widest shadow-2xl whitespace-nowrap inline-block text-center">
+          {/* Start Trading par click karne se Register form khulega */}
+          <Link href="/login?mode=register" className="px-5 py-2.5 bg-white text-black text-[9px] md:text-[10px] font-black rounded-full hover:bg-green-500 transition-all uppercase tracking-widest shadow-2xl whitespace-nowrap inline-block text-center">
             Start Trading
           </Link>
         </div>

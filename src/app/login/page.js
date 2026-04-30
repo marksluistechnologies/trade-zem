@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { Stars, Sparkles, Float } from '@react-three/drei';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { 
   FiMail, FiLock, FiUser, FiUserPlus, 
   FiArrowRight, FiKey, FiShield 
@@ -38,9 +39,119 @@ const InputField = ({ icon: Icon, type, placeholder, name }) => (
   </div>
 );
 
-export default function AuthPage() {
+// --- Auth Logic Component ---
+const AuthContent = () => {
+  const searchParams = useSearchParams();
   const [isLogin, setIsLogin] = useState(true);
 
+  // URL query parameter check karne ka magic
+  useEffect(() => {
+    if (searchParams.get('mode') === 'register') {
+      setIsLogin(false);
+    }
+  }, [searchParams]);
+
+  return (
+    <div className="w-full max-w-md relative z-10">
+      {/* Glass Card */}
+      <div className="bg-gray-900/40 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden">
+        
+        {/* Top Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-green-500 rounded-b-full shadow-[0_0_20px_#22c55e]" />
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={isLogin ? 'login' : 'register'}
+            initial={{ opacity: 0, x: isLogin ? -20 : 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: isLogin ? 20 : -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="w-12 h-12 bg-green-500/10 border border-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-green-500">
+                <FiShield className="text-2xl" />
+              </div>
+              <h1 className="text-3xl font-black uppercase tracking-tighter mb-2">
+                {isLogin ? 'Access Terminal' : 'Create Account'}
+              </h1>
+              <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
+                {isLogin ? 'Enter your credentials to continue' : 'Join the high-velocity arena'}
+              </p>
+            </div>
+
+            {/* Form */}
+            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+              
+              {!isLogin && (
+                <InputField icon={FiUser} type="text" name="name" placeholder="Full Name" />
+              )}
+              
+              <InputField icon={FiMail} type="email" name="email" placeholder="Email Address" />
+              <InputField icon={FiLock} type="password" name="password" placeholder="Password" />
+              
+              {!isLogin && (
+                <>
+                  <InputField icon={FiLock} type="password" name="confirmPassword" placeholder="Confirm Password" />
+                  <InputField icon={FiKey} type="text" name="referral" placeholder="Referral Code (Optional)" />
+                  
+                  <div className="flex items-start gap-3 mt-4 px-1">
+                    <input type="checkbox" id="terms" className="mt-1 accent-green-500 bg-black/50 border-white/10" required />
+                    <label htmlFor="terms" className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
+                      I agree to the <Link href="/terms" className="text-green-500 hover:underline">Terms of Use</Link> and <Link href="/privacy" className="text-green-500 hover:underline">Privacy Policy</Link>.
+                    </label>
+                  </div>
+                </>
+              )}
+
+              {isLogin && (
+                <div className="flex justify-end px-1">
+                  <Link href="#" className="text-[10px] text-green-500 hover:text-green-400 uppercase tracking-widest font-bold transition-colors">
+                    Forgot Password?
+                  </Link>
+                </div>
+              )}
+
+              <button 
+                type="submit" 
+                className="w-full py-4 mt-6 bg-green-500 text-black font-black rounded-xl uppercase tracking-[0.2em] text-xs hover:bg-green-400 transition-all flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(34,197,94,0.2)]"
+              >
+                {isLogin ? 'Initialize Session' : 'Register Node'} <FiArrowRight className="text-lg" />
+              </button>
+            </form>
+
+            {/* Toggle Login/Register */}
+            <div className="mt-8 text-center border-t border-white/5 pt-6">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
+                {isLogin ? "Don't have an account?" : "Already have an account?"}
+              </p>
+              <button 
+                onClick={() => setIsLogin(!isLogin)}
+                className="mt-2 text-xs text-white font-black uppercase tracking-[0.2em] hover:text-green-400 transition-colors flex items-center justify-center gap-2 mx-auto"
+              >
+                {isLogin ? (
+                  <><FiUserPlus /> Create an account</>
+                ) : (
+                  <><FiUser /> Access Terminal</>
+                )}
+              </button>
+            </div>
+
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      
+      {/* Footer Note */}
+      <div className="text-center mt-8 opacity-50">
+         <p className="text-[9px] text-gray-400 uppercase tracking-[0.4em] font-black">
+           TradeZem Protocol • Secure Gateway
+         </p>
+      </div>
+    </div>
+  );
+};
+
+export default function AuthPage() {
   return (
     <div className="relative min-h-screen bg-[#050608] text-white selection:bg-green-500/30 overflow-hidden font-sans flex flex-col">
       
@@ -65,106 +176,11 @@ export default function AuthPage() {
         </Link>
       </nav>
 
-      {/* Auth Container */}
+      {/* Main Container */}
       <main className="relative z-10 flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-md">
-          
-          {/* Glass Card */}
-          <div className="bg-gray-900/40 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden">
-            
-            {/* Top Glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-green-500 rounded-b-full shadow-[0_0_20px_#22c55e]" />
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={isLogin ? 'login' : 'register'}
-                initial={{ opacity: 0, x: isLogin ? -20 : 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: isLogin ? 20 : -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                {/* Header */}
-                <div className="text-center mb-8">
-                  <div className="w-12 h-12 bg-green-500/10 border border-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-green-500">
-                    <FiShield className="text-2xl" />
-                  </div>
-                  <h1 className="text-3xl font-black uppercase tracking-tighter mb-2">
-                    {isLogin ? 'Access Terminal' : 'Create Account'}
-                  </h1>
-                  <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
-                    {isLogin ? 'Enter your credentials to continue' : 'Join the high-velocity arena'}
-                  </p>
-                </div>
-
-                {/* Form */}
-                <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                  
-                  {!isLogin && (
-                    <InputField icon={FiUser} type="text" name="name" placeholder="Full Name" />
-                  )}
-                  
-                  <InputField icon={FiMail} type="email" name="email" placeholder="Email Address" />
-                  <InputField icon={FiLock} type="password" name="password" placeholder="Password" />
-                  
-                  {!isLogin && (
-                    <>
-                      <InputField icon={FiLock} type="password" name="confirmPassword" placeholder="Confirm Password" />
-                      <InputField icon={FiKey} type="text" name="referral" placeholder="Referral Code (Optional)" />
-                      
-                      <div className="flex items-start gap-3 mt-4 px-1">
-                        <input type="checkbox" id="terms" className="mt-1 accent-green-500 bg-black/50 border-white/10" required />
-                        <label htmlFor="terms" className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
-                          I agree to the <Link href="/terms" className="text-green-500 hover:underline">Terms of Use</Link> and <Link href="/privacy" className="text-green-500 hover:underline">Privacy Policy</Link>.
-                        </label>
-                      </div>
-                    </>
-                  )}
-
-                  {isLogin && (
-                    <div className="flex justify-end px-1">
-                      <Link href="#" className="text-[10px] text-green-500 hover:text-green-400 uppercase tracking-widest font-bold transition-colors">
-                        Forgot Password?
-                      </Link>
-                    </div>
-                  )}
-
-                  <button 
-                    type="submit" 
-                    className="w-full py-4 mt-6 bg-green-500 text-black font-black rounded-xl uppercase tracking-[0.2em] text-xs hover:bg-green-400 transition-all flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(34,197,94,0.2)]"
-                  >
-                    {isLogin ? 'Initialize Session' : 'Register Node'} <FiArrowRight className="text-lg" />
-                  </button>
-                </form>
-
-                {/* Toggle Login/Register */}
-                <div className="mt-8 text-center border-t border-white/5 pt-6">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
-                    {isLogin ? "Don't have an account?" : "Already have an account?"}
-                  </p>
-                  <button 
-                    onClick={() => setIsLogin(!isLogin)}
-                    className="mt-2 text-xs text-white font-black uppercase tracking-[0.2em] hover:text-green-400 transition-colors flex items-center justify-center gap-2 mx-auto"
-                  >
-                    {isLogin ? (
-                      <><FiUserPlus /> Create an account</>
-                    ) : (
-                      <><FiUser /> Access Terminal</>
-                    )}
-                  </button>
-                </div>
-
-              </motion.div>
-            </AnimatePresence>
-          </div>
-          
-          {/* Footer Note */}
-          <div className="text-center mt-8 opacity-50">
-             <p className="text-[9px] text-gray-400 uppercase tracking-[0.4em] font-black">
-               TradeZem Protocol • Secure Gateway
-             </p>
-          </div>
-
-        </div>
+        <Suspense fallback={<div className="text-green-500 animate-pulse text-xs font-black uppercase tracking-widest">Loading Gateway...</div>}>
+          <AuthContent />
+        </Suspense>
       </main>
     </div>
   );
