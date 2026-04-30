@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { Stars, Sparkles } from '@react-three/drei';
 import Link from 'next/link';
@@ -9,7 +9,8 @@ import {
   FiHome, FiActivity, FiCreditCard, FiUsers, FiUser, 
   FiArrowUpRight, FiArrowDownLeft, FiClock, 
   FiCheckCircle, FiXCircle, FiBell, FiPlus, FiMinus, 
-  FiEye, FiTarget, FiBriefcase, FiLogOut, FiSettings
+  FiEye, FiTarget, FiBriefcase, FiLogOut, FiSettings,
+  FiChevronLeft, FiChevronRight, FiMenu
 } from 'react-icons/fi';
 
 // --- Shared Badge Component ---
@@ -28,6 +29,9 @@ const Badge = ({ children, type = 'neutral' }) => {
 };
 
 export default function Dashboard() {
+  // Sidebar State for Desktop
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   // Mock Data for UI
   const userData = {
     balance: "1,240.50",
@@ -56,56 +60,83 @@ export default function Dashboard() {
       </div>
 
       {/* ============================================================== */}
-      {/* 1. DESKTOP SIDEBAR (Hidden on Mobile)                          */}
+      {/* 1. DESKTOP SIDEBAR (Collapsible)                               */}
       {/* ============================================================== */}
-      <aside className="fixed left-0 top-0 h-full w-64 bg-[#050608]/90 backdrop-blur-2xl border-r border-white/5 z-50 hidden md:flex flex-col p-6 shadow-[10px_0_30px_rgba(0,0,0,0.5)]">
+      <motion.aside 
+        initial={false}
+        animate={{ width: isSidebarOpen ? 256 : 80 }} // 256px (w-64) or 80px
+        className="fixed left-0 top-0 h-full bg-[#050608]/90 backdrop-blur-2xl border-r border-white/5 z-50 hidden md:flex flex-col py-6 shadow-[10px_0_30px_rgba(0,0,0,0.5)]"
+      >
         
+        {/* Sidebar Toggle Button */}
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="absolute -right-3.5 top-8 w-7 h-7 bg-green-500 text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_15px_#22c55e]"
+        >
+          {isSidebarOpen ? <FiChevronLeft className="text-sm" /> : <FiChevronRight className="text-sm" />}
+        </button>
+
         {/* Brand Logo */}
-        <Link href="/" className="text-xl font-black tracking-[0.3em] flex items-center gap-3 mb-12 hover:opacity-80 transition-opacity">
-          <div className="w-1.5 h-6 bg-green-500 shadow-[0_0_15px_#22c55e]" />
-          TRADE<span className="text-green-500">ZEM</span>
-        </Link>
+        <div className={`px-6 mb-12 flex items-center ${isSidebarOpen ? 'justify-start' : 'justify-center'}`}>
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div className="w-1.5 h-6 bg-green-500 shadow-[0_0_15px_#22c55e] flex-none" />
+            <AnimatePresence>
+              {isSidebarOpen && (
+                <motion.span 
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  className="text-xl font-black tracking-[0.3em] overflow-hidden whitespace-nowrap"
+                >
+                  TRADE<span className="text-green-500">ZEM</span>
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Link>
+        </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 space-y-2">
-          <Link href="/dashboard" className="flex items-center gap-4 p-4 rounded-2xl bg-green-500/10 text-green-400 border border-green-500/20 transition-all">
-            <FiHome className="text-xl" />
-            <span className="text-xs font-black uppercase tracking-widest">Hub</span>
-          </Link>
-          <Link href="#arena" className="flex items-center gap-4 p-4 rounded-2xl text-gray-500 hover:text-white hover:bg-white/5 transition-all">
-            <FiActivity className="text-xl" />
-            <span className="text-xs font-black uppercase tracking-widest">Arena</span>
-          </Link>
-          <Link href="#wallet" className="flex items-center gap-4 p-4 rounded-2xl text-gray-500 hover:text-white hover:bg-white/5 transition-all">
-            <FiCreditCard className="text-xl" />
-            <span className="text-xs font-black uppercase tracking-widest">Wallet</span>
-          </Link>
-          <Link href="#expert" className="flex items-center gap-4 p-4 rounded-2xl text-gray-500 hover:text-white hover:bg-white/5 transition-all">
-            <FiUsers className="text-xl" />
-            <span className="text-xs font-black uppercase tracking-widest">Agent</span>
-          </Link>
+        <nav className="flex-1 space-y-2 px-4">
+          <SidebarItem href="/dashboard" icon={<FiHome />} text="Hub" active isOpen={isSidebarOpen} />
+          <SidebarItem href="#arena" icon={<FiActivity />} text="Arena" isOpen={isSidebarOpen} />
+          <SidebarItem href="#wallet" icon={<FiCreditCard />} text="Wallet" isOpen={isSidebarOpen} />
+          <SidebarItem href="#expert" icon={<FiUsers />} text="Agent" isOpen={isSidebarOpen} />
         </nav>
 
         {/* Footer Actions in Sidebar */}
-        <div className="mt-auto border-t border-white/5 pt-6 space-y-2">
-          <Link href="#settings" className="flex items-center gap-4 p-4 rounded-2xl text-gray-500 hover:text-white hover:bg-white/5 transition-all">
-            <FiSettings className="text-lg" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Settings</span>
-          </Link>
-          <button className="w-full flex items-center gap-4 p-4 rounded-2xl text-red-500 hover:bg-red-500/10 transition-all text-left">
-            <FiLogOut className="text-lg" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Disconnect</span>
+        <div className="mt-auto border-t border-white/5 pt-6 px-4 space-y-2">
+          <SidebarItem href="#settings" icon={<FiSettings />} text="Settings" isOpen={isSidebarOpen} />
+          <button className={`w-full flex items-center gap-4 p-4 rounded-2xl text-red-500 hover:bg-red-500/10 transition-all ${isSidebarOpen ? 'justify-start px-4' : 'justify-center px-0'}`}>
+            <FiLogOut className="text-xl flex-none" />
+            <AnimatePresence>
+              {isSidebarOpen && (
+                <motion.span 
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  className="text-xs font-black uppercase tracking-widest overflow-hidden whitespace-nowrap text-left"
+                >
+                  Disconnect
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* ============================================================== */}
-      {/* 2. MAIN CONTENT AREA (Pushed right on Desktop)                 */}
+      {/* 2. MAIN CONTENT AREA (Pushed right dynamically on Desktop)     */}
       {/* ============================================================== */}
-      <div className="flex-1 w-full relative z-10 md:ml-64 pb-24 md:pb-12 overflow-y-auto h-screen custom-scrollbar">
+      <motion.div 
+        layout
+        initial={false}
+        animate={{ marginLeft: isSidebarOpen ? 256 : 80 }}
+        className="flex-1 w-full relative z-10 pb-24 md:pb-12 overflow-y-auto h-screen custom-scrollbar ml-0 md:ml-64" // default ml-0 for mobile, framer handles desktop
+      >
         
         {/* Top Header */}
-        <header className="p-6 md:p-10 flex justify-between items-center border-b border-white/5 md:border-none bg-[#050608]/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none sticky top-0 z-40">
+        <header className="p-6 md:p-8 flex justify-between items-center border-b border-white/5 bg-[#050608]/80 backdrop-blur-md sticky top-0 z-40">
+          
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-green-500 to-emerald-900 p-[2px]">
               <div className="w-full h-full bg-black rounded-full flex items-center justify-center border border-black overflow-hidden">
@@ -117,68 +148,74 @@ export default function Dashboard() {
               <p className="text-sm md:text-base font-black uppercase tracking-wider">Demo User</p>
             </div>
           </div>
-          <button className="relative p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-            <FiBell className="text-gray-400" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]"></span>
-          </button>
+
+          <div className="flex items-center gap-4">
+            <button className="relative p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+              <FiBell className="text-gray-400 text-sm md:text-base" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]"></span>
+            </button>
+          </div>
         </header>
 
         {/* Dashboard Content */}
-        <main className="max-w-6xl mx-auto px-6 space-y-8">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 mt-6 space-y-6 md:space-y-8">
           
           {/* Portfolio / Balance Card */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-green-500/10 via-transparent to-transparent border border-green-500/20 backdrop-blur-xl shadow-2xl relative overflow-hidden"
+            className="p-6 sm:p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-green-500/10 via-transparent to-transparent border border-green-500/20 backdrop-blur-xl shadow-2xl relative overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 rounded-full blur-[80px]"></div>
+            <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-green-500/5 rounded-full blur-[60px] md:blur-[80px] pointer-events-none"></div>
             
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 relative z-10">
-              <div>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 md:gap-8 relative z-10">
+              
+              <div className="w-full">
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-2 md:mb-3 flex items-center gap-2">
                   Total Portfolio Value <FiEye className="cursor-pointer hover:text-white transition-colors" />
                 </p>
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter flex items-center gap-2">
-                  <span className="text-green-500 text-4xl md:text-5xl">$</span>{userData.balance}
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter flex items-center gap-1 md:gap-2 truncate">
+                  <span className="text-green-500 text-3xl sm:text-4xl md:text-5xl">$</span>{userData.balance}
                 </h1>
               </div>
               
-              <div className="flex w-full lg:w-auto gap-4">
-                <button className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-8 py-5 bg-green-500 text-black font-black rounded-2xl uppercase tracking-widest text-[10px] hover:bg-green-400 transition-all shadow-[0_10px_30px_rgba(34,197,94,0.2)]">
-                  <FiPlus className="text-sm" /> Deposit
+              {/* FIXED: Mobile Button Layout using Grid */}
+              <div className="w-full lg:w-auto grid grid-cols-2 gap-3 sm:gap-4 lg:flex">
+                <button className="flex items-center justify-center gap-1.5 sm:gap-2 py-4 px-2 sm:px-6 lg:px-8 bg-green-500 text-black font-black rounded-xl sm:rounded-2xl uppercase tracking-widest text-[9px] sm:text-[10px] hover:bg-green-400 transition-all shadow-[0_10px_20px_rgba(34,197,94,0.2)] whitespace-nowrap">
+                  <FiPlus className="text-sm flex-none" /> Deposit
                 </button>
-                <button className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-8 py-5 bg-white/5 border border-white/10 text-white font-black rounded-2xl uppercase tracking-widest text-[10px] hover:bg-white/10 transition-all">
-                  <FiMinus className="text-sm" /> Withdraw
+                <button className="flex items-center justify-center gap-1.5 sm:gap-2 py-4 px-2 sm:px-6 lg:px-8 bg-white/5 border border-white/10 text-white font-black rounded-xl sm:rounded-2xl uppercase tracking-widest text-[9px] sm:text-[10px] hover:bg-white/10 transition-all whitespace-nowrap">
+                  <FiMinus className="text-sm flex-none" /> Withdraw
                 </button>
               </div>
+
             </div>
           </motion.div>
 
           {/* Quick Stats Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            <div className="p-6 md:p-8 rounded-[2rem] bg-gray-900/40 border border-white/5 backdrop-blur-md">
-              <FiTarget className="text-2xl text-gray-500 mb-4" />
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Win Rate</p>
-              <p className="text-2xl md:text-3xl font-black text-white">{userData.winRate}</p>
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+            <div className="p-5 sm:p-6 md:p-8 rounded-2xl sm:rounded-[2rem] bg-gray-900/40 border border-white/5 backdrop-blur-md">
+              <FiTarget className="text-xl sm:text-2xl text-gray-500 mb-3 md:mb-4" />
+              <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Win Rate</p>
+              <p className="text-xl sm:text-2xl md:text-3xl font-black text-white">{userData.winRate}</p>
             </div>
-            <div className="p-6 md:p-8 rounded-[2rem] bg-gray-900/40 border border-white/5 backdrop-blur-md">
-              <FiActivity className="text-2xl text-gray-500 mb-4" />
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Total Volume</p>
-              <p className="text-2xl md:text-3xl font-black text-white">{userData.totalVolume}</p>
+            <div className="p-5 sm:p-6 md:p-8 rounded-2xl sm:rounded-[2rem] bg-gray-900/40 border border-white/5 backdrop-blur-md">
+              <FiActivity className="text-xl sm:text-2xl text-gray-500 mb-3 md:mb-4" />
+              <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Total Volume</p>
+              <p className="text-xl sm:text-2xl md:text-3xl font-black text-white truncate">{userData.totalVolume}</p>
             </div>
-            <div className="col-span-2 lg:col-span-1 p-6 md:p-8 rounded-[2rem] bg-green-500/5 border border-white/5 backdrop-blur-md lg:border-l-2 lg:border-l-green-500">
-              <FiBriefcase className="text-2xl text-green-500 mb-4" />
-              <p className="text-[10px] text-green-500 font-bold uppercase tracking-widest mb-1">Network Bonus</p>
-              <p className="text-2xl md:text-3xl font-black text-green-400">{userData.networkBonus}</p>
+            <div className="col-span-2 lg:col-span-1 p-5 sm:p-6 md:p-8 rounded-2xl sm:rounded-[2rem] bg-green-500/5 border border-white/5 backdrop-blur-md lg:border-l-2 lg:border-l-green-500 flex flex-col justify-center">
+              <FiBriefcase className="text-xl sm:text-2xl text-green-500 mb-3 md:mb-4 hidden lg:block" />
+              <p className="text-[9px] sm:text-[10px] text-green-500 font-bold uppercase tracking-widest mb-1">Network Bonus</p>
+              <p className="text-xl sm:text-2xl md:text-3xl font-black text-green-400 truncate">{userData.networkBonus}</p>
             </div>
           </div>
 
           {/* Recent History */}
-          <div className="pt-6">
-            <div className="flex justify-between items-end mb-8 border-b border-white/5 pb-4">
-              <h2 className="text-2xl font-black uppercase tracking-tighter">Recent Arena Runs</h2>
-              <Link href="#" className="text-[10px] font-black text-green-500 uppercase tracking-widest hover:text-white transition-colors">View All History</Link>
+          <div className="pt-4 md:pt-6">
+            <div className="flex justify-between items-end mb-6 md:mb-8 border-b border-white/5 pb-4">
+              <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter">Recent Arena Runs</h2>
+              <Link href="#" className="text-[9px] sm:text-[10px] font-black text-green-500 uppercase tracking-widest hover:text-white transition-colors">View All</Link>
             </div>
 
             <div className="space-y-3">
@@ -188,30 +225,32 @@ export default function Dashboard() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                   key={bet.id} 
-                  className="p-5 md:p-6 rounded-[1.5rem] bg-gray-900/60 border border-white/5 backdrop-blur-md flex justify-between items-center hover:border-green-500/30 transition-all group"
+                  className="p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-[1.5rem] bg-gray-900/60 border border-white/5 backdrop-blur-md flex justify-between items-center hover:border-green-500/30 transition-all group"
                 >
-                  <div className="flex items-center gap-4 md:gap-6">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-none ${bet.status === 'WIN' ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
-                      {bet.status === 'WIN' ? <FiArrowUpRight className="text-2xl" /> : <FiArrowDownLeft className="text-2xl" />}
+                  <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-none ${bet.status === 'WIN' ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
+                      {bet.status === 'WIN' ? <FiArrowUpRight className="text-lg sm:text-2xl" /> : <FiArrowDownLeft className="text-lg sm:text-2xl" />}
                     </div>
                     <div>
-                      <h4 className="text-sm md:text-base font-black uppercase tracking-wider group-hover:text-white transition-colors">{bet.market}</h4>
-                      <p className="text-[9px] md:text-[10px] text-gray-500 font-bold uppercase tracking-widest flex items-center gap-1.5 mt-1">
-                        <FiClock /> {bet.time} • <span className="text-gray-600">{bet.id}</span>
+                      <h4 className="text-xs sm:text-sm md:text-base font-black uppercase tracking-wider group-hover:text-white transition-colors">{bet.market}</h4>
+                      <p className="text-[8px] sm:text-[9px] md:text-[10px] text-gray-500 font-bold uppercase tracking-widest flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-1.5 mt-1">
+                        <span className="flex items-center gap-1"><FiClock className="flex-none"/> {bet.time}</span>
+                        <span className="hidden sm:inline">•</span>
+                        <span className="text-gray-600">{bet.id}</span>
                       </p>
                     </div>
                   </div>
 
-                  <div className="text-right flex items-center gap-8">
+                  <div className="text-right flex items-center gap-4 sm:gap-8">
                     <div className="hidden sm:block text-right">
-                      <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-1">Staked</p>
-                      <p className="text-sm font-black text-white">${bet.amount}</p>
+                      <p className="text-[8px] sm:text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-1">Staked</p>
+                      <p className="text-xs sm:text-sm font-black text-white">${bet.amount}</p>
                     </div>
-                    <div className="text-right min-w-[80px]">
+                    <div className="text-right min-w-[70px] sm:min-w-[80px]">
                       <Badge type={bet.status === 'WIN' ? 'success' : 'danger'}>
                         {bet.status === 'WIN' ? <FiCheckCircle /> : <FiXCircle />} {bet.status}
                       </Badge>
-                      <p className={`text-base font-black mt-1.5 ${bet.status === 'WIN' ? 'text-green-400' : 'text-red-400'}`}>
+                      <p className={`text-sm sm:text-base font-black mt-1.5 ${bet.status === 'WIN' ? 'text-green-400' : 'text-red-400'}`}>
                         {bet.profit}
                       </p>
                     </div>
@@ -221,7 +260,7 @@ export default function Dashboard() {
             </div>
           </div>
         </main>
-      </div>
+      </motion.div>
 
       {/* ============================================================== */}
       {/* 3. MOBILE BOTTOM NAV (Hidden on Desktop)                       */}
@@ -240,7 +279,7 @@ export default function Dashboard() {
           </Link>
 
           {/* Trade Button (Center Highlight) */}
-          <Link href="#trade" className="relative -top-5 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-black font-black shadow-[0_10px_30px_rgba(34,197,94,0.4)] hover:scale-105 transition-transform">
+          <Link href="#trade" className="relative -top-5 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-black font-black shadow-[0_10px_30px_rgba(34,197,94,0.4)] hover:scale-105 transition-transform flex-none">
             <FiPlus className="text-2xl" />
           </Link>
 
@@ -258,5 +297,33 @@ export default function Dashboard() {
       </nav>
       
     </div>
+  );
+}
+
+// Helper Component for Sidebar Items (to handle expanded/collapsed state cleanly)
+function SidebarItem({ href, icon, text, active, isOpen }) {
+  return (
+    <Link 
+      href={href} 
+      className={`flex items-center gap-4 p-4 rounded-2xl transition-all ${
+        active 
+          ? 'bg-green-500/10 text-green-400 border border-green-500/20' 
+          : 'text-gray-500 hover:text-white hover:bg-white/5 border border-transparent'
+      } ${isOpen ? 'justify-start px-4' : 'justify-center px-0'}`}
+    >
+      <div className="text-xl flex-none">{icon}</div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.span 
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: 'auto' }}
+            exit={{ opacity: 0, width: 0 }}
+            className="text-xs font-black uppercase tracking-widest overflow-hidden whitespace-nowrap"
+          >
+            {text}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </Link>
   );
 }
