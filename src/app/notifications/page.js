@@ -3,19 +3,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
-import { Stars, Sparkles } from '@react-three/drei';
-import Link from 'next/link';
+import { Stars } from '@react-three/drei';
 import { 
-  FiHome, FiActivity, FiCreditCard, FiUsers, 
   FiArrowUpRight, FiArrowDownLeft, FiClock, 
-  FiCheckCircle, FiBell, FiPlus, 
-  FiTarget, FiLogOut, FiSettings,
-  FiChevronLeft, FiChevronRight, FiGift, FiAlertTriangle, FiCheck
+  FiCheckCircle, FiBell, FiGift, FiAlertTriangle, FiCheck
 } from 'react-icons/fi';
 
+// Hamara common Navigation component import kiya hai
+import Navigation from '@/components/Navigation';
+
 export default function NotificationsPage() {
-  // Sidebar State for Desktop
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Mock Notification Data
   const [notifications, setNotifications] = useState([
@@ -88,49 +85,9 @@ export default function NotificationsPage() {
       </div>
 
       {/* ============================================================== */}
-      {/* 1. DESKTOP SIDEBAR (Same as Dashboard)                         */}
+      {/* 1. SHARED NAVIGATION (Sidebar + Bottom Nav)                    */}
       {/* ============================================================== */}
-      <motion.aside 
-        initial={false}
-        animate={{ width: isSidebarOpen ? 256 : 80 }}
-        className="sticky top-0 h-screen flex-none bg-[#050608]/90 backdrop-blur-2xl border-r border-white/5 z-50 hidden md:flex flex-col py-6 shadow-[10px_0_30px_rgba(0,0,0,0.5)]"
-      >
-        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="absolute -right-3.5 top-8 w-7 h-7 bg-green-500 text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_15px_#22c55e]">
-          {isSidebarOpen ? <FiChevronLeft className="text-sm" /> : <FiChevronRight className="text-sm" />}
-        </button>
-
-        <div className={`px-6 mb-12 flex items-center ${isSidebarOpen ? 'justify-start' : 'justify-center'}`}>
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div className="w-1.5 h-6 bg-green-500 shadow-[0_0_15px_#22c55e] flex-none" />
-            <AnimatePresence>
-              {isSidebarOpen && (
-                <motion.span initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="text-xl font-black tracking-[0.3em] overflow-hidden whitespace-nowrap">
-                  TRADE<span className="text-green-500">ZEM</span>
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </Link>
-        </div>
-
-        <nav className="flex-1 space-y-2 px-4">
-          <SidebarItem href="/dashboard" icon={<FiHome />} text="Hub" isOpen={isSidebarOpen} />
-          <SidebarItem href="/dashboard#arena" icon={<FiActivity />} text="Arena" isOpen={isSidebarOpen} />
-          <SidebarItem href="/dashboard#wallet" icon={<FiCreditCard />} text="Wallet" isOpen={isSidebarOpen} />
-          <SidebarItem href="/dashboard#expert" icon={<FiUsers />} text="Profile" isOpen={isSidebarOpen} />
-        </nav>
-
-        <div className="mt-auto border-t border-white/5 pt-6 px-4 space-y-2">
-          <SidebarItem href="/dashboard#settings" icon={<FiSettings />} text="Settings" isOpen={isSidebarOpen} />
-          <button className={`w-full flex items-center gap-4 p-4 rounded-2xl text-red-500 hover:bg-red-500/10 transition-all ${isSidebarOpen ? 'justify-start px-4' : 'justify-center px-0'}`}>
-            <FiLogOut className="text-xl flex-none" />
-            <AnimatePresence>
-              {isSidebarOpen && (
-                <motion.span initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="text-xs font-black uppercase tracking-widest overflow-hidden whitespace-nowrap text-left">Disconnect</motion.span>
-              )}
-            </AnimatePresence>
-          </button>
-        </div>
-      </motion.aside>
+      <Navigation />
 
       {/* ============================================================== */}
       {/* 2. MAIN CONTENT AREA                                           */}
@@ -207,53 +164,6 @@ export default function NotificationsPage() {
           )}
         </main>
       </div>
-
-      {/* ============================================================== */}
-      {/* 3. MOBILE BOTTOM NAV                                           */}
-      {/* ============================================================== */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 md:hidden bg-[#050608]/95 backdrop-blur-3xl border-t border-white/10 px-6 py-4 pb-safe">
-        <div className="flex justify-between items-center">
-          <Link href="/dashboard" className="flex flex-col items-center gap-1.5 text-gray-500 hover:text-white transition-colors">
-            <FiHome className="text-xl" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Hub</span>
-          </Link>
-          <Link href="/dashboard#arena" className="flex flex-col items-center gap-1.5 text-gray-500 hover:text-white transition-colors">
-            <FiActivity className="text-xl" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Arena</span>
-          </Link>
-          <Link href="/dashboard#trade" className="relative -top-5 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-black font-black shadow-[0_10px_30px_rgba(34,197,94,0.4)] hover:scale-105 transition-transform flex-none">
-            <FiPlus className="text-2xl" />
-          </Link>
-          <Link href="/notifications" className="flex flex-col items-center gap-1.5 text-green-500 relative">
-             <div className="relative">
-                <FiBell className="text-xl" />
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full animate-pulse shadow-[0_0_10px_white]"></span>
-             </div>
-            <span className="text-[8px] font-black uppercase tracking-widest">Alerts</span>
-          </Link>
-          <Link href="/dashboard#expert" className="flex flex-col items-center gap-1.5 text-gray-500 hover:text-white transition-colors">
-            <FiUsers className="text-xl" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Profile</span>
-          </Link>
-        </div>
-      </nav>
-      
     </div>
-  );
-}
-
-// Helper Component for Sidebar Items
-function SidebarItem({ href, icon, text, active, isOpen }) {
-  return (
-    <Link href={href} className={`flex items-center gap-4 p-4 rounded-2xl transition-all ${active ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'text-gray-500 hover:text-white hover:bg-white/5 border border-transparent'} ${isOpen ? 'justify-start px-4' : 'justify-center px-0'}`}>
-      <div className="text-xl flex-none">{icon}</div>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.span initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="text-xs font-black uppercase tracking-widest overflow-hidden whitespace-nowrap">
-            {text}
-          </motion.span>
-        )}
-      </AnimatePresence>
-    </Link>
   );
 }
